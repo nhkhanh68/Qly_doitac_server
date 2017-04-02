@@ -133,9 +133,8 @@ public class PartnerSerivce {
     }
 
     public void editPartnerContact(PartnerContactDTO partnerContactDTO) {
-        Partner partner = partnerRepository.findById(partnerContactDTO.getPartnerId());
-        if (partner != null){
-            PartnerContact partnerContact = partnerContactRepository.findById(partnerContactDTO.getId());
+        PartnerContact partnerContact = partnerContactRepository.findById(partnerContactDTO.getId());
+        if (partnerContact != null){
             partnerContact.setContactName(partnerContactDTO.getContactName());
             partnerContact.setEmail(partnerContactDTO.getEmail());
             partnerContact.setSkype(partnerContactDTO.getSkype());

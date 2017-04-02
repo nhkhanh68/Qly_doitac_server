@@ -63,11 +63,54 @@ public class NationService {
     }
 
     public void deleteNation(int nationId) {
-        Nation nation = nationRepository.findOne(nationId);
+        Nation nation = nationRepository.findById(nationId);
         if(nation != null){
-            nationRepository.delete(nationId);
+            if (nation.getPartner().isEmpty()) {
+                nationRepository.delete(nationId);
+            } else {
+                throw new NullPointerException("Không thể xóa Quốc gia này vì có 1 số doanh nghiệp thuộc quốc gia này!");
+            }
         } else{
             throw new NullPointerException("Không tim thấy quốc gia cần được xóa!");
+        }
+    }
+
+    public void editNation(NationDTO nationDTO) {
+                Nation nation = nationRepository.findOne(nationDTO.getId());
+                if (nation != null) {
+                    if (nationDTO.getNationName() != null) {
+                        nation.setNationName(nationDTO.getNationName());
+                        nationRepository.save(nation);
+                    }
+        } else {
+            throw new NullPointerException("Có lỗi khi xảy ra, hãy thử lại reload trang và thử lại!");
+        }
+    }
+
+    public void editContinent(ContinentDTO continentDTO) {
+        Continent continent = continentRepository.findOne(continentDTO.getId());
+        if (continent != null) {
+            if (continentDTO.getContinentName() != null) {
+                continent.setContinentName(continentDTO.getContinentName());
+                continentRepository.save(continent);
+            } else {
+                throw new NullPointerException("Tên Quốc gia trống!");
+            }
+        } else {
+            throw new NullPointerException("Không tìm thấy quốc gia, hãy reload lại trang và thử lại");
+        }
+    }
+
+    public void deleteContinent(int continentId) {
+        Continent continent = continentRepository.findOne(continentId);
+        if(continent != null){
+            if (continent.getNation().isEmpty()) {
+                continentRepository.delete(continentId);
+            } else {
+                throw new NullPointerException("Không thể xóa Châu lục này vì có 1 số quốc gia thuộc châu lục này!");
+            }
+        } else{
+            throw new NullPointerException("Không tim thấy Châu lục cần được xóa!");
         }
     }
 }

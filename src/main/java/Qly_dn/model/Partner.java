@@ -15,7 +15,7 @@ public class Partner {
 //    @JsonIgnore
     private Nation nation;
     private PartnerInfo partnerInfo;
-    @JsonIgnore
+//    @JsonIgnore
     private Set<PartnerContact> partnerContacts;
     @JsonIgnore
     private Set<Contract> contracts;

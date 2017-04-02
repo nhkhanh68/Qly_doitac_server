@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by nhkha on 25/03/2017.
@@ -33,10 +32,28 @@ public class NationController {
         return nationService.createContinent(continentDTO);
     }
 
+    //edit continent
+    @RequestMapping(value = "continent/edit", method = RequestMethod.PUT)
+    public void editContinent(@RequestBody ContinentDTO continentDTO){
+        nationService.editContinent(continentDTO);
+    }
+
+    //delete continent
+    @RequestMapping(value = "/continent/{continentId}/delete", method = RequestMethod.DELETE)
+    public void deleteContinent(@PathVariable("continentId") int continentId){
+        nationService.deleteContinent(continentId);
+    }
+
     //create nation
     @RequestMapping(value = "/continent/{continentId}/nation/create", method = RequestMethod.POST)
     public void createNation(@RequestBody List<NationDTO> List, @PathVariable("continentId") int continentId){
         nationService.createNation(List, continentId);
+    }
+
+    //edit nation
+    @RequestMapping(value = "nation/edit", method = RequestMethod.PUT)
+    public void editNation(@RequestBody NationDTO nationDTO){
+        nationService.editNation(nationDTO);
     }
 
     //show all continent

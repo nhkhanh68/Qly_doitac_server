@@ -11,4 +11,5 @@ import org.springframework.stereotype.Repository;
 public interface NationRepository extends CrudRepository<Nation, Integer>{
     Nation findByNationName(String nationName);
 //    Iterable<Nation> findAll();
+    Nation findById (int id);
 }
