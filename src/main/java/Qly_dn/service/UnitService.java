@@ -49,7 +49,7 @@ public class UnitService {
                 unit.setUnitName(unitNameDTO.getUnitName());
                 unitNameRepository.save(unit);
             }else {
-                throw new NullPointerException("Có lỗi xảy ra khi sửa đơn vị!");
+                throw new NullPointerException("Tên đơn vị trống!");
             }
         } else {
             throw new NullPointerException("Đơn vị không tồn tại!");

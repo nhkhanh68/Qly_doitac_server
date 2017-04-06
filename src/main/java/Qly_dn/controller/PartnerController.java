@@ -44,7 +44,7 @@ public class PartnerController {
     }
 
     //create partner contact
-    @RequestMapping(value = "partner/{partnerId}/contact/create", method = RequestMethod.POST)
+    @RequestMapping(value = " ", method = RequestMethod.POST)
     public Set<PartnerContact> createPartnerContact(@PathVariable("partnerId") int partnerId,
                                                     @RequestBody PartnerContactDTO partnerContactDTO){
         return partnerSerivce.createPartnerContact(partnerId, partnerContactDTO);
@@ -57,9 +57,9 @@ public class PartnerController {
     }
 
     //delete partner contact
-    @RequestMapping(value = "partner/{partnerId}/contact/{contactId}/delete", method = RequestMethod.DELETE)
-    public void deletePartnerContact(@PathVariable("contactId") int contactId, @PathVariable("partnerId") int partnerId){
-        partnerSerivce.deletePartnerContact(contactId, partnerId);
+    @RequestMapping(value = "partner/contact/{contactId}/delete", method = RequestMethod.DELETE)
+    public void deletePartnerContact(@PathVariable("contactId") int contactId){
+        partnerSerivce.deletePartnerContact(contactId);
     }
 
     //show all partner

@@ -146,10 +146,14 @@ public class PartnerSerivce {
         }
     }
 
-    public void deletePartnerContact(int contactId, int partnerId) {
-        PartnerContact partnerContact = partnerContactRepository.findByIdAndPartnerId(contactId, partnerId);
+    public void deletePartnerContact(int contactId) {
+        PartnerContact partnerContact = partnerContactRepository.findById(contactId);
         if (partnerContact != null){
-            partnerContactRepository.delete(contactId);
+            if (partnerContact.getContract().isEmpty()){
+                partnerContactRepository.delete(contactId);
+            } else {
+                throw new NullPointerException("Không thể xóa liên hệ này vì có 1 số hợp đồng được kí bởi liên hệ này!");
+            }
         } else {
             throw new NullPointerException("Không tìm thấy Liên lạc cần xóa!");
         }

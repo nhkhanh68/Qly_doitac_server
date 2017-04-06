@@ -29,9 +29,14 @@ public class UetManService {
     public UetMan createUetMan(UetManDTO uetManDTO) {
         UetMan uetMan = uetManRepository.findByUetManName(uetManDTO.getUetManName());
         if (uetMan == null){
-            UetMan uetMan1 = new UetMan();
-            uetMan1.setUetManName(uetManDTO.getUetManName());
-            return uetManRepository.save(uetMan1);
+            if (uetManDTO.getUetManName() != null){
+                UetMan uetMan1 = new UetMan();
+                uetMan1.setUetManName(uetManDTO.getUetManName());
+                return uetManRepository.save(uetMan1);
+            } else {
+                throw new NullPointerException("Tên Người ký (VNU-UET) trống");
+            }
+
         } else {
             throw new NullPointerException("Người ký (VNU-UET) đã tồn tại!");
         }
