@@ -60,7 +60,7 @@ public class PartnerSerivce {
     public void deletePartner(int partnerId) {
         Partner partner = partnerRepository.findById(partnerId);
         if(partner != null){
-            partnerRepository.delete(partner);
+            partnerInfoRepository.delete(partnerInfoRepository.findByPartnerId(partnerId));
         } else {
             throw new NullPointerException("Không tìm thấy đối tác!");
         }

@@ -2,9 +2,7 @@ package Qly_dn.interceptor;
 
 import Qly_dn.repository.UserRepository;
 import Qly_dn.stereotype.NoAuthentication;
-import Qly_dn.stereotype.RequiedToken;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -35,16 +33,12 @@ public class TokenAuthenticationInterceptor extends HandlerInterceptorAdapter {
             } else if (token == null) {
                 throw new NullPointerException("UNAUTHORIZED");
             } else {
-//                RequiedToken requiedToken = handlerMethod.getMethodAnnotation(RequiedToken.class);
-//                if (requiedToken != null) {
-                    if(userRepository.findByToken(token) != null){
-                        return true;
-                    } else{
-                        throw new NullPointerException("UNAUTHORIZED");
-                    }
-//                }
+                if(userRepository.findByToken(token) != null){
+                    return true;
+                } else{
+                    throw new NullPointerException("UNAUTHORIZED");
+                }
             }
-
         }
         return true;
     }
