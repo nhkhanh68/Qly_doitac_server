@@ -44,7 +44,7 @@ public class PartnerController {
     }
 
     //create partner contact
-    @RequestMapping(value = " ", method = RequestMethod.POST)
+    @RequestMapping(value = "partner/{partnerId}/contact/create", method = RequestMethod.POST)
     public Set<PartnerContact> createPartnerContact(@PathVariable("partnerId") int partnerId,
                                                     @RequestBody PartnerContactDTO partnerContactDTO){
         return partnerSerivce.createPartnerContact(partnerId, partnerContactDTO);

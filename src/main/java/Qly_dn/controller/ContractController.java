@@ -5,7 +5,6 @@ import Qly_dn.model.Contract;
 import Qly_dn.service.ContractService;
 import Qly_dn.stereotype.RequiedToken;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,6 +28,7 @@ public class ContractController {
         return contractService.createContract(contractDTO);
     }
 
+    //edit contract
     @RequestMapping(value = "contract/{contractId}/edit", method = RequestMethod.PUT)
     public void editContract(@PathVariable("contractId") int contractId, @RequestBody ContractDTO contractDTO){
         contractService.editContract(contractDTO, contractId);
