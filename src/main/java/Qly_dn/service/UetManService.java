@@ -58,7 +58,7 @@ public class UetManService {
 
     public void deleteUetMan(int uetManId) {
         if (uetManRepository.findOne(uetManId) != null){
-            if (!contractRepository.findByUnitNameId(uetManId).isEmpty()){
+            if (!contractRepository.findByUetManId(uetManId).isEmpty()){
                 throw new NullPointerException("Không thể xóa Người ký (VNU-UET) này vì Người ký (VNU-UET) đang nằm trong 1 số hợp đồng!");
             } else {
                 uetManRepository.delete(uetManId);

@@ -27,6 +27,7 @@ public class Contract {
     private PartnerContact partnerContact;
     private UetMan uetMan;
     private UnitName unitName;
+    @Column(length  = 2800000)
     private String contentContract;
 
     public Contract(){

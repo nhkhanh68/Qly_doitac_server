@@ -10,4 +10,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PartnerInfoRepository extends CrudRepository<PartnerInfo, Integer>{
     PartnerInfo findByPartnerId(int id);
+    PartnerInfo findByPartnerNameContaining(String partnerName);
 }

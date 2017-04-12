@@ -13,5 +13,6 @@ import java.util.List;
 public interface ContractRepository extends CrudRepository<Contract, Integer>{
     List<Contract> findByTypeContractId(int id);
     List<Contract> findByUnitNameId(int id);
+    List<Contract> findByUetManId(int id);
     Contract findById (int id);
 }

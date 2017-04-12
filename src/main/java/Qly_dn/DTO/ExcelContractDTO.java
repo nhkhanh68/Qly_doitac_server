@@ -1,13 +1,11 @@
 package Qly_dn.DTO;
 
-import Qly_dn.model.*;
-
 import java.sql.Date;
 
 /**
- * Created by nhkha on 25/03/2017.
+ * Created by nhkha on 10/04/2017.
  */
-public class ContractDTO {
+public class ExcelContractDTO {
     private int id;
     private String result;
     private Integer renew;
@@ -17,11 +15,6 @@ public class ContractDTO {
     private Date endDate;
     private int ordinaryNumber;
     private int number;
-    private Partner partner;
-    private PartnerContact partnerContact;
-    private TypeContract typeContract;
-    private UetMan uetMan;
-    private UnitName unitName;
     private String contentContract;
     private int partnerContactId;
     private int partnerId;
@@ -102,53 +95,12 @@ public class ContractDTO {
         this.number = number;
     }
 
-    public Partner getPartner() {
-        return partner;
-    }
-
-    public void setPartner(Partner partner) {
-        this.partner = partner;
-    }
-
-    public TypeContract getTypeContract() {
-        return typeContract;
-    }
-
-    public void setTypeContract(TypeContract typeContract) {
-        this.typeContract = typeContract;
-    }
-
-
-    public UetMan getUetMan() {
-        return uetMan;
-    }
-
-    public void setUetMan(UetMan uetMan) {
-        this.uetMan = uetMan;
-    }
-
-    public UnitName getUnitName() {
-        return unitName;
-    }
-
-    public void setUnitName(UnitName unitName) {
-        this.unitName = unitName;
-    }
-
     public String getContentContract() {
         return contentContract;
     }
 
     public void setContentContract(String contentContract) {
         this.contentContract = contentContract;
-    }
-
-    public PartnerContact getPartnerContact() {
-        return partnerContact;
-    }
-
-    public void setPartnerContact(PartnerContact partnerContact) {
-        this.partnerContact = partnerContact;
     }
 
     public int getPartnerContactId() {

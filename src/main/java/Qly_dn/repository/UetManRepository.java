@@ -10,5 +10,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UetManRepository extends CrudRepository<UetMan, Integer>{
     UetMan findByUetManName (String uetManName);
+    UetMan findByUetManNameContaining(String s);
     UetMan findById (int id);
 }

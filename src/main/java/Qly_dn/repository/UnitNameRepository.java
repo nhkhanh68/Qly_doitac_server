@@ -10,5 +10,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UnitNameRepository extends CrudRepository<UnitName, Integer>{
     UnitName findByUnitName (String unitName);
+    UnitName findByUnitNameContaining(String s);
     UnitName findById (int id);
 }
