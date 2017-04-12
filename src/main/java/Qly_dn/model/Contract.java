@@ -34,9 +34,9 @@ public class Contract {
 
     }
 
-    public Contract(Partner partner, TypeContract typeContract, PartnerContact partnerContact, UetMan uetMan, UnitName unitName){
+    public Contract(Partner partner, PartnerContact partnerContact, UetMan uetMan, UnitName unitName){
         this.partner = partner;
-        this.typeContract = typeContract;
+//        this.typeContract = typeContract;
         this.partnerContact = partnerContact;
         this.uetMan = uetMan;
         this.unitName = unitName;

@@ -5,7 +5,6 @@ import Qly_dn.DTO.ContractDTO;
 import Qly_dn.DTO.ExcelContractDTO;
 import Qly_dn.model.*;
 import Qly_dn.repository.*;
-import org.hibernate.annotations.Check;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -48,14 +47,14 @@ public class ContractService {
 
     public Contract createContract(ContractDTO contractDTO) {
         if ((contractDTO.getPartnerContactId() + contractDTO.getPartnerId() + contractDTO.getUetManId() +
-                contractDTO.getUnitNameId() + contractDTO.getTypeContractId()) != 0 ){
+                contractDTO.getUnitNameId()) != 0 ){
             UetMan uetMan = uetManRepository.findById(contractDTO.getUetManId());
             UnitName unitName = unitNameRepository.findById(contractDTO.getUnitNameId());
             Partner partner = partnerRepository.findById(contractDTO.getPartnerId());
             PartnerContact partnerContact = partnerContactRepository.findById(contractDTO.getPartnerContactId());
-            TypeContract typeContract = typeContractRepository.findById(contractDTO.getTypeContractId());
-            if (uetMan != null && unitName != null && partner != null && partnerContact != null && typeContract != null){
-                Contract contract = new Contract(partner, typeContract, partnerContact, uetMan, unitName);
+//            TypeContract typeContract = typeContractRepository.findById(contractDTO.getTypeContractId());
+            if (uetMan != null && unitName != null && partner != null && partnerContact != null){
+                Contract contract = new Contract(partner, partnerContact, uetMan, unitName);
 
                 contract.setContentContract(contractDTO.getContentContract());
                 contract.setFunding(contractDTO.getFunding());
@@ -74,12 +73,11 @@ public class ContractService {
                 partnerContact.setContract(setContract);
                 unitName.setContract(setContract);
                 uetMan.setContract(setContract);
-                typeContract.setContract(setContract);
+//                typeContract.setContract(setContract);
 
                 partnerRepository.save(partner);
                 partnerContactRepository.save(partnerContact);
                 unitNameRepository.save(unitName);
-                typeContractRepository.save(typeContract);
                 uetManRepository.save(uetMan);
                 return contract;
             } else {
@@ -210,14 +208,14 @@ public class ContractService {
         Set<ExcelContractDTO> listContract = new HashSet<>();
         for(ExcelContractDTO contractDTO : List){
             if ((contractDTO.getPartnerContactId() + contractDTO.getPartnerId() + contractDTO.getUetManId() +
-                    contractDTO.getUnitNameId() + contractDTO.getTypeContractId()) != 0 ){
+                    contractDTO.getUnitNameId()) != 0 ){
                 UetMan uetMan = uetManRepository.findById(contractDTO.getUetManId());
                 UnitName unitName = unitNameRepository.findById(contractDTO.getUnitNameId());
                 Partner partner = partnerRepository.findById(contractDTO.getPartnerId());
                 PartnerContact partnerContact = partnerContactRepository.findById(contractDTO.getPartnerContactId());
-                TypeContract typeContract = typeContractRepository.findById(contractDTO.getTypeContractId());
-                if (uetMan != null && unitName != null && partner != null && partnerContact != null && typeContract != null){
-                    Contract contract = new Contract(partner, typeContract, partnerContact, uetMan, unitName);
+//                TypeContract typeContract = typeContractRepository.findById(contractDTO.getTypeContractId());
+                if (uetMan != null && unitName != null && partner != null && partnerContact != null){
+                    Contract contract = new Contract(partner, partnerContact, uetMan, unitName);
 
                     contract.setContentContract(contractDTO.getContentContract());
                     contract.setFunding(contractDTO.getFunding());
@@ -236,12 +234,12 @@ public class ContractService {
                     partnerContact.setContract(setContract);
                     unitName.setContract(setContract);
                     uetMan.setContract(setContract);
-                    typeContract.setContract(setContract);
+//                    typeContract.setContract(setContract);
 
                     partnerRepository.save(partner);
                     partnerContactRepository.save(partnerContact);
                     unitNameRepository.save(unitName);
-                    typeContractRepository.save(typeContract);
+//                    typeContractRepository.save(typeContract);
                     uetManRepository.save(uetMan);
 //                    return contract;
                 } else {
