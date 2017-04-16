@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.Set;
 
 /**
  * Created by nhkha on 25/03/2017.
@@ -29,6 +30,7 @@ public class Contract {
     private UnitName unitName;
     @Column(length  = 2800000)
     private String contentContract;
+    private Set<CooperateActivity> cooperateActivity;
 
     public Contract(){
 
@@ -172,5 +174,14 @@ public class Contract {
 
     public void setPartnerContact(PartnerContact partnerContact) {
         this.partnerContact = partnerContact;
+    }
+
+    @OneToMany(mappedBy = "contract", cascade = CascadeType.ALL)
+    public Set<CooperateActivity> getCooperateActivity() {
+        return cooperateActivity;
+    }
+
+    public void setCooperateActivity(Set<CooperateActivity> cooperateActivity) {
+        this.cooperateActivity = cooperateActivity;
     }
 }

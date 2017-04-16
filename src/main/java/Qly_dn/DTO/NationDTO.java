@@ -9,7 +9,6 @@ import Qly_dn.model.Partner;
 public class NationDTO {
     private int id;
     private String nationName;
-    private Continent continent;
     private Partner partner;
 
     public int getId() {
@@ -26,14 +25,6 @@ public class NationDTO {
 
     public void setNationName(String nationName) {
         this.nationName = nationName;
-    }
-
-    public Continent getContinent() {
-        return continent;
-    }
-
-    public void setContinent(Continent continent) {
-        this.continent = continent;
     }
 
     public Partner getPartner() {

@@ -7,6 +7,7 @@ import Qly_dn.service.TypeContractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 
@@ -25,20 +26,23 @@ public class TypeContractController {
 
     //create type contract
     @RequestMapping(value = "typeContract/create", method = RequestMethod.POST)
-    public TypeContract createTypeContract(@RequestBody TypeContactDTO typeContactDTO){
-        return typeContractService.createTypeContract(typeContactDTO);
+    public TypeContract createTypeContract(@RequestBody TypeContactDTO typeContactDTO, HttpServletRequest request){
+        String token = request.getHeader("auth-token");
+        return typeContractService.createTypeContract(typeContactDTO, token);
     }
 
     //edit type contract
     @RequestMapping(value = "typeContract/edit", method = RequestMethod.PUT)
-    public TypeContract editTypeContract(@RequestBody TypeContactDTO typeContactDTO){
-        return typeContractService.editTypeContract(typeContactDTO);
+    public TypeContract editTypeContract(@RequestBody TypeContactDTO typeContactDTO, HttpServletRequest request){
+        String token = request.getHeader("auth-token");
+        return typeContractService.editTypeContract(typeContactDTO, token);
     }
 
     //delete type contract
     @RequestMapping(value = "typeContract/{typeContractId}/delete", method = RequestMethod.DELETE)
-    public void deleteTypeContract(@PathVariable("typeContractId") int typeContractId){
-        typeContractService.deleteTypeContract(typeContractId);
+    public void deleteTypeContract(@PathVariable("typeContractId") int typeContractId, HttpServletRequest request){
+        String token = request.getHeader("auth-token");
+        typeContractService.deleteTypeContract(typeContractId, token);
     }
 
     //show all type contract

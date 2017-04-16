@@ -29,6 +29,7 @@ public class ContractDTO {
     private int typeContractId;
     private int unitNameId;
     private int STT;
+    private String cooperateActivityValue;
 
     public int getId() {
         return id;
@@ -197,5 +198,13 @@ public class ContractDTO {
 
     public void setSTT(int STT) {
         this.STT = STT;
+    }
+
+    public String getCooperateActivityValue() {
+        return cooperateActivityValue;
+    }
+
+    public void setCooperateActivityValue(String cooperateActivityValue) {
+        this.cooperateActivityValue = cooperateActivityValue;
     }
 }

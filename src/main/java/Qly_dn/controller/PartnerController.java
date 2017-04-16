@@ -9,6 +9,7 @@ import Qly_dn.service.PartnerSerivce;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Set;
 
@@ -27,39 +28,46 @@ public class PartnerController {
 
     //create partner
     @RequestMapping(value = "partner/create", method = RequestMethod.POST)
-    public Partner createPartner(@RequestBody PartnerDTO partnerDTO){
-        return partnerSerivce.createPartner(partnerDTO);
+    public Partner createPartner(@RequestBody PartnerDTO partnerDTO, HttpServletRequest request){
+        String token = request.getHeader("auth-token");
+        return partnerSerivce.createPartner(partnerDTO, token);
     }
 
     //delete partner
     @RequestMapping(value = "partner/{partnerId}/delete", method = RequestMethod.DELETE)
-    public void deleteParner(@PathVariable("partnerId") int partnerId){
-        partnerSerivce.deletePartner(partnerId);
+    public void deleteParner(@PathVariable("partnerId") int partnerId, HttpServletRequest request){
+        String token = request.getHeader("auth-token");
+        partnerSerivce.deletePartner(partnerId, token);
     }
 
     //edit partner info and nation
     @RequestMapping(value = "partner/edit", method = RequestMethod.PUT)
-    public Partner editPartnerInfo(@RequestBody PartnerInfoDTO partnerInfoDTO){
-        return partnerSerivce.editPartnerInfo(partnerInfoDTO);
+    public Partner editPartnerInfo(@RequestBody PartnerInfoDTO partnerInfoDTO, HttpServletRequest request){
+        String token = request.getHeader("auth-token");
+        return partnerSerivce.editPartnerInfo(partnerInfoDTO, token);
     }
 
     //create partner contact
     @RequestMapping(value = "partner/{partnerId}/contact/create", method = RequestMethod.POST)
     public Set<PartnerContact> createPartnerContact(@PathVariable("partnerId") int partnerId,
-                                                    @RequestBody PartnerContactDTO partnerContactDTO){
-        return partnerSerivce.createPartnerContact(partnerId, partnerContactDTO);
+                                                    @RequestBody PartnerContactDTO partnerContactDTO,
+                                                    HttpServletRequest request){
+        String token = request.getHeader("auth-token");
+        return partnerSerivce.createPartnerContact(partnerId, partnerContactDTO, token);
     }
 
     //edit partner contact
     @RequestMapping(value = "partner/contact/edit", method = RequestMethod.PUT)
-    public void editPartnerContact(@RequestBody PartnerContactDTO partnerContactDTO){
-        partnerSerivce.editPartnerContact(partnerContactDTO);
+    public void editPartnerContact(@RequestBody PartnerContactDTO partnerContactDTO, HttpServletRequest request){
+        String token = request.getHeader("auth-token");
+        partnerSerivce.editPartnerContact(partnerContactDTO, token);
     }
 
     //delete partner contact
     @RequestMapping(value = "partner/contact/{contactId}/delete", method = RequestMethod.DELETE)
-    public void deletePartnerContact(@PathVariable("contactId") int contactId){
-        partnerSerivce.deletePartnerContact(contactId);
+    public void deletePartnerContact(@PathVariable("contactId") int contactId, HttpServletRequest request){
+        String token = request.getHeader("auth-token");
+        partnerSerivce.deletePartnerContact(contactId, token);
     }
 
     //show all partner

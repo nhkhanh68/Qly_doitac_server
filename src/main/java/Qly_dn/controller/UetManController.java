@@ -6,6 +6,7 @@ import Qly_dn.service.UetManService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -23,21 +24,24 @@ public class UetManController {
 
     //create uet man
     @RequestMapping(value = "uetMan/create", method = RequestMethod.POST)
-    public UetMan createUnit(@RequestBody UetManDTO uetManDTO){
-        return uetManService.createUetMan(uetManDTO);
+    public UetMan createUnit(@RequestBody UetManDTO uetManDTO, HttpServletRequest request){
+        String token = request.getHeader("auth-token");
+        return uetManService.createUetMan(uetManDTO, token);
     }
 
     //edit Unit
     //edit uet man
     @RequestMapping(value = "uetMan/edit", method = RequestMethod.PUT)
-    public void editTypeContract(@RequestBody UetManDTO uetManDTO){
-        uetManService.editUetMan(uetManDTO);
+    public void editTypeContract(@RequestBody UetManDTO uetManDTO, HttpServletRequest request){
+        String token = request.getHeader("auth-token");
+        uetManService.editUetMan(uetManDTO, token);
     }
 
     //delete unit
     @RequestMapping(value = "uetMan/{uetManId}/delete", method = RequestMethod.DELETE)
-    public void deleteUnit(@PathVariable("uetManId") int uetManId){
-        uetManService.deleteUetMan(uetManId);
+    public void deleteUnit(@PathVariable("uetManId") int uetManId, HttpServletRequest request){
+        String token = request.getHeader("auth-token");
+        uetManService.deleteUetMan(uetManId, token);
     }
 
     //show all uet man

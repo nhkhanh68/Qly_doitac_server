@@ -1,5 +1,7 @@
 package Qly_dn.DTO;
 
+import Qly_dn.model.Role;
+
 /**
  * Created by nhkha on 25/03/2017.
  */
@@ -8,6 +10,7 @@ public class UserDTO {
     private String userName;
     private String password;
     private String token;
+    private Role role;
 
     public int getId() {
         return id;
@@ -39,5 +42,13 @@ public class UserDTO {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

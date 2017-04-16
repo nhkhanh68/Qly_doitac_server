@@ -19,6 +19,8 @@ public class Partner {
     private Set<PartnerContact> partnerContacts;
     @JsonIgnore
     private Set<Contract> contracts;
+    @JsonIgnore
+    private Set<CooperateActivity> cooperateActivities;
 
     public Partner(){
 
@@ -72,5 +74,14 @@ public class Partner {
 
     public void setContracts(Set<Contract> contracts) {
         this.contracts = contracts;
+    }
+
+    @OneToMany(mappedBy = "partner", cascade = CascadeType.ALL)
+    public Set<CooperateActivity> getCooperateActivities() {
+        return cooperateActivities;
+    }
+
+    public void setCooperateActivities(Set<CooperateActivity> cooperateActivities) {
+        this.cooperateActivities = cooperateActivities;
     }
 }

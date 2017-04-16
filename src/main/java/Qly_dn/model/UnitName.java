@@ -15,11 +15,14 @@ public class UnitName {
     private String unitName;
     @JsonIgnore
     private Set<Contract> contract;
-
+    private User user;
     public UnitName(){
 
     }
 
+    public UnitName(User user){
+        this.user = user;
+    }
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public int getId() {
@@ -45,5 +48,15 @@ public class UnitName {
 
     public void setContract(Set<Contract> contract) {
         this.contract = contract;
+    }
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

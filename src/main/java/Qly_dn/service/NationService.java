@@ -2,10 +2,11 @@ package Qly_dn.service;
 
 import Qly_dn.DTO.ContinentDTO;
 import Qly_dn.DTO.NationDTO;
-import Qly_dn.model.Continent;
-import Qly_dn.model.Nation;
+import Qly_dn.model.*;
+import Qly_dn.repository.ActivityLogRepository;
 import Qly_dn.repository.ContinentRepository;
 import Qly_dn.repository.NationRepository;
+import Qly_dn.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,36 +25,65 @@ public class NationService {
     private final
     NationRepository nationRepository;
 
+    private final
+    UserRepository userRepository;
+
+    private final
+    ActivityLogRepository activityLogRepository;
+
     @Autowired
-    public NationService(ContinentRepository continentRepository, NationRepository nationRepository) {
+    public NationService(ContinentRepository continentRepository, NationRepository nationRepository, UserRepository userRepository, ActivityLogRepository activityLogRepository) {
         this.continentRepository = continentRepository;
         this.nationRepository = nationRepository;
+        this.userRepository = userRepository;
+        this.activityLogRepository = activityLogRepository;
     }
-    public Continent createContinent(ContinentDTO continentDTO) {
+    public Continent createContinent(ContinentDTO continentDTO, String token) {
         Continent continent = continentRepository.findByContinentName(continentDTO.getContinentName());
         if(continent == null){
             Continent newContinent = new Continent();
             newContinent.setContinentName(continentDTO.getContinentName());
+            User user = userRepository.findByToken(token);
+            if(user.getRole().equals(Role.UNIT)){
+                ActivityLog activityLog = new ActivityLog(user);
+                userRepository.save(user);
+                activityLog.setActivityType("createContinent");
+                activityLog.setAcvtivity(user.getUnitName().getUnitName() + " tạo thêm Châu lục " +
+                        continentDTO.getContinentName() + " vào lúc " + activityLog.getTimestamp());
+                activityLog.setStatus("NEW");
+                activityLogRepository.save(activityLog);
+            }
             return continentRepository.save(newContinent);
         } else{
             throw new NullPointerException("Châu lục đã tồn tại!");
         }
     }
 
-    public void createNation(List<NationDTO> listNationDTO, int continentId){
+    public void createNation(NationDTO nationDTO, int continentId, String token){
+//        if(user.getRole().equals(Role.ADMIN))
         Continent continent = continentRepository.findOne(continentId);
         if(continent == null){
             throw new NullPointerException("Châu lục không tồn tại");
         } else{
             Set<Nation> setNation = new HashSet<>();
 //            add(new Book("Book B1", categoryB));
-            for(NationDTO nationDTO: listNationDTO){
+//            for(NationDTO nationDTO: listNationDTO){
                 if(nationRepository.findByNationName(nationDTO.getNationName()) == null){
                     setNation.add(new Nation(nationDTO.getNationName(), continent));
                 }
-            }
+//            }
             continent.setNation(setNation);
             continentRepository.save(continent);
+            User user = userRepository.findByToken(token);
+            if(user.getRole().equals(Role.UNIT)){
+                ActivityLog activityLog = new ActivityLog(user);
+                userRepository.save(user);
+                activityLog.setActivityType("createNation");
+                activityLog.setAcvtivity(user.getUnitName().getUnitName() + " tạo thêm Quốc gia " +
+                        nationDTO.getNationName() + " vào lúc " + activityLog.getTimestamp());
+                activityLog.setStatus("NEW");
+                activityLogRepository.save(activityLog);
+            }
         }
     }
 
@@ -62,11 +92,21 @@ public class NationService {
         return (List<Continent>) continentRepository.findAll();
     }
 
-    public void deleteNation(int nationId) {
+    public void deleteNation(int nationId, String token) {
         Nation nation = nationRepository.findById(nationId);
         if(nation != null){
             if (nation.getPartner().isEmpty()) {
                 nationRepository.delete(nationId);
+                User user = userRepository.findByToken(token);
+                if(user.getRole().equals(Role.UNIT)){
+                    ActivityLog activityLog = new ActivityLog(user);
+                    userRepository.save(user);
+                    activityLog.setActivityType("deleteNation");
+                    activityLog.setAcvtivity(user.getUnitName().getUnitName() + " xóa Quốc gia " +
+                            nation.getNationName() + " vào lúc " + activityLog.getTimestamp());
+                    activityLog.setStatus("NEW");
+                    activityLogRepository.save(activityLog);
+                }
             } else {
                 throw new NullPointerException("Không thể xóa Quốc gia này vì có 1 số doanh nghiệp thuộc quốc gia này!");
             }
@@ -75,24 +115,44 @@ public class NationService {
         }
     }
 
-    public void editNation(NationDTO nationDTO) {
+    public void editNation(NationDTO nationDTO, String token) {
                 Nation nation = nationRepository.findOne(nationDTO.getId());
                 if (nation != null) {
                     if (nationDTO.getNationName() != null) {
                         nation.setNationName(nationDTO.getNationName());
                         nationRepository.save(nation);
+                        User user = userRepository.findByToken(token);
+                        if(user.getRole().equals(Role.UNIT)){
+                            ActivityLog activityLog = new ActivityLog(user);
+                            userRepository.save(user);
+                            activityLog.setActivityType("editNation");
+                            activityLog.setAcvtivity(user.getUnitName().getUnitName() + " sửa tên Quốc gia: " +
+                                    nation.getNationName() + " thành: " + nationDTO.getNationName() + " vào lúc " + activityLog.getTimestamp());
+                            activityLog.setStatus("NEW");
+                            activityLogRepository.save(activityLog);
+                        }
                     }
         } else {
             throw new NullPointerException("Có lỗi khi xảy ra, hãy thử lại reload trang và thử lại!");
         }
     }
 
-    public void editContinent(ContinentDTO continentDTO) {
+    public void editContinent(ContinentDTO continentDTO, String token) {
         Continent continent = continentRepository.findOne(continentDTO.getId());
         if (continent != null) {
             if (continentDTO.getContinentName() != null) {
                 continent.setContinentName(continentDTO.getContinentName());
                 continentRepository.save(continent);
+                User user = userRepository.findByToken(token);
+                if(user.getRole().equals(Role.UNIT)){
+                    ActivityLog activityLog = new ActivityLog(user);
+                    userRepository.save(user);
+                    activityLog.setActivityType("editContinent");
+                    activityLog.setAcvtivity(user.getUnitName().getUnitName() + " sửa tên Châu lục: " +
+                            continent.getContinentName() + " thành: " + continentDTO.getContinentName() + " vào lúc " + activityLog.getTimestamp());
+                    activityLog.setStatus("NEW");
+                    activityLogRepository.save(activityLog);
+                }
             } else {
                 throw new NullPointerException("Tên Quốc gia trống!");
             }
@@ -101,11 +161,21 @@ public class NationService {
         }
     }
 
-    public void deleteContinent(int continentId) {
+    public void deleteContinent(int continentId, String token) {
         Continent continent = continentRepository.findOne(continentId);
         if(continent != null){
             if (continent.getNation().isEmpty()) {
                 continentRepository.delete(continentId);
+                User user = userRepository.findByToken(token);
+                if(user.getRole().equals(Role.UNIT)){
+                    ActivityLog activityLog = new ActivityLog(user);
+                    userRepository.save(user);
+                    activityLog.setActivityType("deleteContinent");
+                    activityLog.setAcvtivity(user.getUnitName().getUnitName() + " xóa Châu lục: " +
+                            continent.getContinentName() + " vào lúc " + activityLog.getTimestamp());
+                    activityLog.setStatus("NEW");
+                    activityLogRepository.save(activityLog);
+                }
             } else {
                 throw new NullPointerException("Không thể xóa Châu lục này vì có 1 số quốc gia thuộc châu lục này!");
             }
