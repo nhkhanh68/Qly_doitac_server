@@ -9,10 +9,19 @@ import javax.persistence.*;
  */
 @Entity
 public class CooperateActivity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
+    @Column(name = "cooperateActivity", length  = 2800000)
     private String cooperateActivity;
+
+    @ManyToOne
+    @JoinColumn(name = "contract_id")
     @JsonIgnore
     private Contract contract;
+
+    @ManyToOne
+    @JoinColumn(name = "partner_id")
     @JsonIgnore
     private Partner partner;
 
@@ -26,8 +35,7 @@ public class CooperateActivity {
         this.contract = contract;
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+
     public int getId() {
         return id;
     }
@@ -44,8 +52,7 @@ public class CooperateActivity {
         this.cooperateActivity = cooperateActivity;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "contract_id")
+
     public Contract getContract() {
         return contract;
     }
@@ -54,8 +61,6 @@ public class CooperateActivity {
         this.contract = contract;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "partner_id")
     public Partner getPartner() {
         return partner;
     }

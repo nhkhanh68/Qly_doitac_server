@@ -19,7 +19,6 @@ public class ContractDTO {
     private int number;
     private Partner partner;
     private PartnerContact partnerContact;
-    private TypeContract typeContract;
     private UetMan uetMan;
     private UnitName unitName;
     private String contentContract;
@@ -111,13 +110,6 @@ public class ContractDTO {
         this.partner = partner;
     }
 
-    public TypeContract getTypeContract() {
-        return typeContract;
-    }
-
-    public void setTypeContract(TypeContract typeContract) {
-        this.typeContract = typeContract;
-    }
 
 
     public UetMan getUetMan() {

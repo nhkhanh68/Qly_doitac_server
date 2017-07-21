@@ -11,8 +11,12 @@ import java.util.Set;
 @Entity
 @Table(name = "continent")
 public class Continent {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String continentName;
+
+    @OneToMany(mappedBy = "continent", cascade = CascadeType.ALL)
 //    @JsonIgnore
     private Set<Nation> nation;
 
@@ -24,8 +28,7 @@ public class Continent {
         this.continentName = continentName;
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+
     public int getId() {
         return id;
     }
@@ -42,7 +45,7 @@ public class Continent {
         this.continentName = continentName;
     }
 
-    @OneToMany(mappedBy = "continent", cascade = CascadeType.ALL)
+
     public Set<Nation> getNation() {
         return nation;
     }

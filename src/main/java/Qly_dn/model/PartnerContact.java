@@ -11,14 +11,21 @@ import java.util.Set;
 @Entity
 @Table(name = "partner_contact")
 public class PartnerContact {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String contactName;
     private String phone;
     private String email;
     private String skype;
     private String about;
+
+    @ManyToOne
+    @JoinColumn(name = "partner_id")
     @JsonIgnore
     private Partner partner;
+
+    @OneToMany(mappedBy = "partnerContact")
     @JsonIgnore
     private Set<Contract> contract;
 
@@ -35,8 +42,7 @@ public class PartnerContact {
         this.partner = partner;
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+
     public int getId() {
         return id;
     }
@@ -85,8 +91,7 @@ public class PartnerContact {
         this.about = about;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "partner_id")
+
     public Partner getPartner() {
         return partner;
     }
@@ -95,7 +100,7 @@ public class PartnerContact {
         this.partner = partner;
     }
 
-    @OneToMany(mappedBy = "partnerContact", cascade = CascadeType.ALL)
+
     public Set<Contract> getContract() {
         return contract;
     }

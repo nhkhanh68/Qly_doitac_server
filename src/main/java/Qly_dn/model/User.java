@@ -11,29 +11,34 @@ import java.util.Set;
 @Entity
 @Table(name = "user")
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String userName;
+
     @JsonIgnore
     private String password;
     private String token;
 
+    @Enumerated(EnumType.STRING)
     private Role role;
 
+    @OneToOne(mappedBy = "user")
     @JsonIgnore
     private UnitName unitName;
+
+    @OneToMany(mappedBy = "user")
     @JsonIgnore
     private Set<ActivityLog> activityLog;
 
     public User(){
-
     }
 
     public User(UnitName unitName){
         this.unitName = unitName;
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+
     public int getId() {
         return id;
     }
@@ -67,7 +72,6 @@ public class User {
     }
 
 
-    @OneToOne(mappedBy = "user")
     public UnitName getUnitName() {
         return unitName;
     }
@@ -76,7 +80,7 @@ public class User {
         this.unitName = unitName;
     }
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+
     public Set<ActivityLog> getActivityLog() {
         return activityLog;
     }
@@ -85,7 +89,6 @@ public class User {
         this.activityLog = activityLog;
     }
 
-    @Enumerated(EnumType.STRING)
     public Role getRole() {
         return role;
     }

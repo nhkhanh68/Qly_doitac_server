@@ -11,10 +11,17 @@ import java.util.Set;
 @Entity
 @Table(name = "nation")
 public class Nation {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String nationName;
+
+    @ManyToOne
+    @JoinColumn(name = "continent_id")
     @JsonIgnore
     private Continent continent;
+
+    @OneToMany(mappedBy = "nation")
     @JsonIgnore
     private Set<Partner> partner;
 
@@ -31,8 +38,7 @@ public class Nation {
         this.continent = continent;
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+
     public int getId() {
         return id;
     }
@@ -49,8 +55,7 @@ public class Nation {
         this.nationName = nationName;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "continent_id")
+
     public Continent getContinent() {
         return continent;
     }
@@ -59,7 +64,7 @@ public class Nation {
         this.continent = continent;
     }
 
-    @OneToMany(mappedBy = "nation", cascade = CascadeType.ALL)
+
     public Set<Partner> getPartner() {
         return partner;
     }

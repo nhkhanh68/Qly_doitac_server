@@ -11,8 +11,12 @@ import java.util.Set;
 @Entity
 @Table(name = "uet_man")
 public class UetMan {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String uetManName;
+
+    @OneToMany(mappedBy = "uetMan")
     @JsonIgnore
     private Set<Contract> contract;
 
@@ -20,8 +24,6 @@ public class UetMan {
 
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     public int getId() {
         return id;
     }
@@ -37,7 +39,7 @@ public class UetMan {
         this.uetManName = uetManName;
     }
 
-    @OneToMany(mappedBy = "uetMan")
+
     public Set<Contract> getContract() {
         return contract;
     }

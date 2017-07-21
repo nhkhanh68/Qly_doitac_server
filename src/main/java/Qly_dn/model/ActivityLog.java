@@ -12,12 +12,18 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "activity_log")
 public class ActivityLog {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String acvtivity;
     private Timestamp timestamp;
     private String activityType;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     @JsonIgnore
     private User user;
+
     private String status;
     private int contractId;
 
@@ -30,8 +36,7 @@ public class ActivityLog {
         this.timestamp = new Timestamp(System.currentTimeMillis());
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+
     public int getId() {
         return id;
     }
@@ -48,8 +53,7 @@ public class ActivityLog {
         this.acvtivity = acvtivity;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+
     public User getUser() {
         return user;
     }

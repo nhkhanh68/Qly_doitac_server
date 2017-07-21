@@ -11,11 +11,19 @@ import java.util.Set;
 @Entity
 @Table(name = "unit_name")
 public class UnitName {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String unitName;
+
+    @OneToMany(mappedBy = "unitName")
     @JsonIgnore
     private Set<Contract> contract;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
     private User user;
+
     public UnitName(){
 
     }
@@ -23,8 +31,7 @@ public class UnitName {
     public UnitName(User user){
         this.user = user;
     }
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+
     public int getId() {
         return id;
     }
@@ -41,7 +48,6 @@ public class UnitName {
         this.unitName = unitName;
     }
 
-    @OneToMany(mappedBy = "unitName", cascade = CascadeType.ALL)
     public Set<Contract> getContract() {
         return contract;
     }
@@ -50,8 +56,7 @@ public class UnitName {
         this.contract = contract;
     }
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
+
     public User getUser() {
         return user;
     }

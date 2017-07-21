@@ -29,10 +29,6 @@ public class ContractService {
     private final
     PartnerRepository partnerRepository;
     private final
-    TypeContractRepository typeContractRepository;
-    private final
-    PartnerInfoRepository partnerInfoRepository;
-    private final
     CooperateActivityRepository cooperateActivityRepository;
     private final
     UserRepository userRepository;
@@ -43,15 +39,14 @@ public class ContractService {
     @Autowired
     public ContractService(ContractRepository contractRepository, UetManRepository uetManRepository,
                            UnitNameRepository unitNameRepository, PartnerContactRepository partnerContactRepository,
-                           PartnerRepository partnerRepository, TypeContractRepository typeContractRepository,
-                           PartnerInfoRepository partnerInfoRepository, CooperateActivityRepository cooperateActivityRepository, UserRepository userRepository, ActivityLogRepository activityLogRepository) {
+                           PartnerRepository partnerRepository,
+                           CooperateActivityRepository cooperateActivityRepository, UserRepository userRepository,
+                           ActivityLogRepository activityLogRepository) {
         this.contractRepository = contractRepository;
         this.uetManRepository = uetManRepository;
         this.unitNameRepository = unitNameRepository;
         this.partnerContactRepository = partnerContactRepository;
         this.partnerRepository = partnerRepository;
-        this.typeContractRepository = typeContractRepository;
-        this.partnerInfoRepository = partnerInfoRepository;
         this.cooperateActivityRepository = cooperateActivityRepository;
         this.userRepository = userRepository;
         this.activityLogRepository = activityLogRepository;
@@ -64,11 +59,12 @@ public class ContractService {
                 contractDTO.getUnitNameId()) != 0 ){
             UetMan uetMan = uetManRepository.findById(contractDTO.getUetManId());
             User user = userRepository.findByToken(token);
-//            if (user.getRole().equals(Role.UNIT)){
-//                UnitName unitName = user.getUnitName();
-//            } else{
-                UnitName unitName = unitNameRepository.findById(contractDTO.getUnitNameId());
-//            }
+            UnitName unitName;
+            if (user.getRole().equals(Role.UNIT)){
+                unitName = user.getUnitName();
+            } else{
+                unitName = unitNameRepository.findById(contractDTO.getUnitNameId());
+            }
             Partner partner = partnerRepository.findById(contractDTO.getPartnerId());
             PartnerContact partnerContact = partnerContactRepository.findById(contractDTO.getPartnerContactId());
 //            TypeContract typeContract = typeContractRepository.findById(contractDTO.getTypeContractId());
@@ -113,7 +109,7 @@ public class ContractService {
                     userRepository.save(user);
                     activityLog.setActivityType("createContract");
                     activityLog.setAcvtivity(user.getUnitName().getUnitName() + " tạo Hợp đồng cho đối tác: " +
-                            partner.getPartnerInfo().getPartnerName() + " vào lúc " + activityLog.getTimestamp());
+                            partner.getPartnerName() + " vào lúc " + activityLog.getTimestamp());
                     activityLog.setStatus("NEW");
                     activityLog.setContractId(contract.getId());
                     activityLogRepository.save(activityLog);
@@ -175,7 +171,7 @@ public class ContractService {
                 userRepository.save(user);
                 activityLog.setActivityType("editContract");
                 activityLog.setAcvtivity(user.getUnitName().getUnitName() + " sửa Hợp đồng của đối tác: " +
-                        contract.getPartner().getPartnerInfo().getPartnerName() + " vào lúc " + activityLog.getTimestamp());
+                        contract.getPartner().getPartnerName() + " vào lúc " + activityLog.getTimestamp());
                 activityLog.setStatus("NEW");
                 activityLog.setContractId(contract.getId());
                 activityLogRepository.save(activityLog);
@@ -203,7 +199,7 @@ public class ContractService {
                 userRepository.save(user);
                 activityLog.setActivityType("createContract");
                 activityLog.setAcvtivity(user.getUnitName().getUnitName() + " xóa Hợp đồng của đối tác: " +
-                        contract.getPartner().getPartnerInfo().getPartnerName() + " vào lúc " + activityLog.getTimestamp());
+                        contract.getPartner().getPartnerName() + " vào lúc " + activityLog.getTimestamp());
                 activityLog.setStatus("NEW");
 //                activityLog.setContractId(contract.getId());
                 activityLogRepository.save(activityLog);
@@ -221,10 +217,10 @@ public class ContractService {
         int countPartner = 0;
         String contactId = "";
         if(checkContractDTO.getPartnerName() != null){
-            PartnerInfo partnerInfo = partnerInfoRepository.findByPartnerNameContaining(checkContractDTO.getPartnerName());
-            if(partnerInfo != null){
-                checkContractDTO.setPartnerName(String.valueOf(partnerInfo.getPartner().getId()));
-                Set<PartnerContact> partners = partnerInfo.getPartner().getPartnerContacts();
+            Partner partner = partnerRepository.findByPartnerNameContaining(checkContractDTO.getPartnerName());
+            if(partner != null){
+                checkContractDTO.setPartnerName(String.valueOf(partner.getId()));
+                Set<PartnerContact> partners = partner.getPartnerContacts();
                 for(PartnerContact partnerContact : partners){
                     if (checkContractDTO.getContactName().contains(partnerContact.getContactName())){
                         countPartner++;
@@ -325,7 +321,7 @@ public class ContractService {
                         userRepository.save(user);
                         activityLog.setActivityType("createContract");
                         activityLog.setAcvtivity(user.getUnitName().getUnitName() + " tạo Hợp đồng cho đối tác: " +
-                                partner.getPartnerInfo().getPartnerName() + " vào lúc " + activityLog.getTimestamp());
+                                partner.getPartnerName() + " vào lúc " + activityLog.getTimestamp());
                         activityLog.setStatus("NEW");
                         activityLog.setContractId(contract.getId());
                         activityLogRepository.save(activityLog);
@@ -357,7 +353,7 @@ public class ContractService {
                     userRepository.save(user);
                     activityLog.setActivityType("editCooperateActivity");
                     activityLog.setAcvtivity(user.getUnitName().getUnitName() + " sửa hoạt động hợp tác Hợp đồng của đối tác: " +
-                            cooperateActivity.getPartner().getPartnerInfo().getPartnerName() + " vào lúc " + activityLog.getTimestamp());
+                            cooperateActivity.getPartner().getPartnerName() + " vào lúc " + activityLog.getTimestamp());
                     activityLog.setStatus("NEW");
                     activityLog.setContractId(contract.getId());
                     activityLogRepository.save(activityLog);
@@ -380,7 +376,7 @@ public class ContractService {
                 userRepository.save(user);
                 activityLog.setActivityType("deleteCooperateActivity");
                 activityLog.setAcvtivity(user.getUnitName().getUnitName() + " xóa hoạt động hợp tác: " + cooperateActivity.getCooperateActivity() + " của Hợp đồng của đối tác: " +
-                        cooperateActivity.getPartner().getPartnerInfo().getPartnerName() + " vào lúc " + activityLog.getTimestamp());
+                        cooperateActivity.getPartner().getPartnerName() + " vào lúc " + activityLog.getTimestamp());
                 activityLog.setStatus("NEW");
                 activityLog.setContractId(cooperateActivity.getContract().getId());
                 activityLogRepository.save(activityLog);
@@ -411,7 +407,7 @@ public class ContractService {
                 userRepository.save(user);
                 activityLog.setActivityType("addCooperateActivity");
                 activityLog.setAcvtivity(user.getUnitName().getUnitName() + " thêm hoạt động hợp tác: " + cooperateActivityDTO.getCooperateActivity() + " của Hợp đồng của đối tác: " +
-                        contract.getPartner().getPartnerInfo().getPartnerName() + " vào lúc " + activityLog.getTimestamp());
+                        contract.getPartner().getPartnerName() + " vào lúc " + activityLog.getTimestamp());
                 activityLog.setStatus("NEW");
                 activityLog.setContractId(contract.getId());
                 activityLogRepository.save(activityLog);

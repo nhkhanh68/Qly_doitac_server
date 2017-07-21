@@ -24,9 +24,6 @@ public class PartnerSerivce {
     PartnerRepository partnerRepository;
 
     private final
-    PartnerInfoRepository partnerInfoRepository;
-
-    private final
     PartnerContactRepository partnerContactRepository;
 
     private final
@@ -36,10 +33,11 @@ public class PartnerSerivce {
     ActivityLogRepository activityLogRepository;
 
     @Autowired
-    public PartnerSerivce(NationRepository nationRepository, PartnerRepository partnerRepository, PartnerInfoRepository partnerInfoRepository, PartnerContactRepository partnerContactRepository, UserRepository userRepository, ActivityLogRepository activityLogRepository) {
+    public PartnerSerivce(NationRepository nationRepository, PartnerRepository partnerRepository,
+                          PartnerContactRepository partnerContactRepository, UserRepository userRepository,
+                          ActivityLogRepository activityLogRepository) {
         this.nationRepository = nationRepository;
         this.partnerRepository = partnerRepository;
-        this.partnerInfoRepository = partnerInfoRepository;
         this.partnerContactRepository = partnerContactRepository;
         this.userRepository = userRepository;
         this.activityLogRepository = activityLogRepository;
@@ -47,14 +45,12 @@ public class PartnerSerivce {
 
     public Partner createPartner(PartnerDTO partnerDTO, String token) {
         Nation nation = nationRepository.findOne(partnerDTO.getNationId());
-        if(nation != null){
+        if (nation != null) {
             Partner partner = new Partner(nation);
+            partner.setPartnerName(partnerDTO.getPartnerName());
             partnerRepository.save(partner);
-            PartnerInfo partnerInfo = new PartnerInfo(partner);
-            partnerInfo.setPartnerName(partnerDTO.getPartnerName());
-            partnerInfoRepository.save(partnerInfo);
             User user = userRepository.findByToken(token);
-            if(user.getRole().equals(Role.UNIT)){
+            if (user.getRole().equals(Role.UNIT)) {
                 ActivityLog activityLog = new ActivityLog(user);
                 userRepository.save(user);
                 activityLog.setActivityType("createPartner");
@@ -64,22 +60,22 @@ public class PartnerSerivce {
                 activityLogRepository.save(activityLog);
             }
             return partner;
-        } else{
+        } else {
             throw new NullPointerException("Không tìm thấy Quốc gia!");
         }
     }
 
     public void deletePartner(int partnerId, String token) {
         Partner partner = partnerRepository.findById(partnerId);
-        if(partner != null){
-            partnerInfoRepository.delete(partnerInfoRepository.findByPartnerId(partnerId));
+        if (partner != null) {
+            partnerRepository.delete(partner);
             User user = userRepository.findByToken(token);
-            if(user.getRole().equals(Role.UNIT)){
+            if (user.getRole().equals(Role.UNIT)) {
                 ActivityLog activityLog = new ActivityLog(user);
                 userRepository.save(user);
                 activityLog.setActivityType("deletePartner");
                 activityLog.setAcvtivity(user.getUnitName().getUnitName() + " xóa Đối tác " +
-                        partner.getPartnerInfo().getPartnerName() + " vào lúc " + activityLog.getTimestamp());
+                        partner.getPartnerName() + " vào lúc " + activityLog.getTimestamp());
                 activityLog.setStatus("NEW");
                 activityLogRepository.save(activityLog);
             }
@@ -91,38 +87,20 @@ public class PartnerSerivce {
 
     public Partner editPartnerInfo(PartnerInfoDTO partnerInfoDTO, String token) {
         Partner partner = partnerRepository.findById(partnerInfoDTO.getPartnerId());
-        if(partner != null){
-            PartnerInfo partnerInfo = partner.getPartnerInfo();
-            if (partnerInfoDTO.getPartnerName() != null){
-                partnerInfo.setPartnerName(partnerInfoDTO.getPartnerName());
-            }
-            if (partnerInfoDTO.getTaxCode() != null){
-                partnerInfo.setTaxCode(partnerInfoDTO.getTaxCode());
-            }
-            if (partnerInfoDTO.getDirector() != null){
-                partnerInfo.setDirector(partnerInfoDTO.getDirector());
-            }
-            if (partnerInfoDTO.getFieldWork() != null){
-                partnerInfo.setFieldWork(partnerInfoDTO.getFieldWork());
-            }
-            if (partnerInfoDTO.getWebsite() != null){
-                partnerInfo.setWebsite(partnerInfoDTO.getWebsite());
-            }
-            if (partnerInfoDTO.getAddress() != null){
-                partnerInfo.setAddress(partnerInfoDTO.getAddress());
-            }
-            if (partnerInfoDTO.getPhone() != null){
-                partnerInfo.setPhone(partnerInfoDTO.getPhone());
-            }
-            if (partnerInfoDTO.getFax() != null){
-                partnerInfo.setFax(partnerInfoDTO.getFax());
-            }
-            if (partnerInfoDTO.getEmail() != null){
-                partnerInfo.setEmail(partnerInfoDTO.getEmail());
-            }
-            if (partnerInfoDTO.getNationId() != 0){
+        if (partner != null) {
+            partner.setPartnerName(partnerInfoDTO.getPartnerName());
+            partner.setTaxCode(partnerInfoDTO.getTaxCode());
+            partner.setDirector(partnerInfoDTO.getDirector());
+            partner.setFieldWork(partnerInfoDTO.getFieldWork());
+            partner.setWebsite(partnerInfoDTO.getWebsite());
+            partner.setAddress(partnerInfoDTO.getAddress());
+            partner.setPhone(partnerInfoDTO.getPhone());
+            partner.setFax(partnerInfoDTO.getFax());
+            partner.setEmail(partnerInfoDTO.getEmail());
+            partner.setDescription(partnerInfoDTO.getDescription());
+            if (partnerInfoDTO.getNationId() != 0) {
                 Nation nation = nationRepository.findOne(partnerInfoDTO.getNationId());
-                if(nation != null){
+                if (nation != null) {
                     partner.setNation(nation);
 //                    nation.set
 
@@ -131,14 +109,14 @@ public class PartnerSerivce {
                     throw new NullPointerException("Không tìm thấy Quóc gia! " + partnerInfoDTO.getNationId());
                 }
             }
-            partnerInfoRepository.save(partnerInfo);
+            partnerRepository.save(partner);
             User user = userRepository.findByToken(token);
-            if(user.getRole().equals(Role.UNIT)){
+            if (user.getRole().equals(Role.UNIT)) {
                 ActivityLog activityLog = new ActivityLog(user);
                 userRepository.save(user);
                 activityLog.setActivityType("editPartnerInfo");
                 activityLog.setAcvtivity(user.getUnitName().getUnitName() + " sửa thông tin Đối tác " +
-                        partnerInfo.getPartnerName() + " vào lúc " + activityLog.getTimestamp());
+                        partner.getPartnerName() + " vào lúc " + activityLog.getTimestamp());
                 activityLog.setStatus("NEW");
                 activityLogRepository.save(activityLog);
             }
@@ -150,20 +128,20 @@ public class PartnerSerivce {
 
     public Set<PartnerContact> createPartnerContact(int partnerId, PartnerContactDTO partnerContactDTO, String token) {
         Partner partner = partnerRepository.findById(partnerId);
-        if (partner != null){
+        if (partner != null) {
             Set<PartnerContact> setPartnerContact = new HashSet<>();
             setPartnerContact.add(new PartnerContact(partnerContactDTO.getContactName(),
-                partnerContactDTO.getPhone(), partnerContactDTO.getEmail(), partnerContactDTO.getSkype(),
-                partnerContactDTO.getAbout(), partner));
+                    partnerContactDTO.getPhone(), partnerContactDTO.getEmail(), partnerContactDTO.getSkype(),
+                    partnerContactDTO.getAbout(), partner));
             partner.setPartnerContacts(setPartnerContact);
             partnerRepository.save(partner);
             User user = userRepository.findByToken(token);
-            if(user.getRole().equals(Role.UNIT)){
+            if (user.getRole().equals(Role.UNIT)) {
                 ActivityLog activityLog = new ActivityLog(user);
                 userRepository.save(user);
                 activityLog.setActivityType("createPartnerContact");
                 activityLog.setAcvtivity(user.getUnitName().getUnitName() + " tạo liên hệ cho Đối tác " +
-                        partner.getPartnerInfo().getPartnerName() + " vào lúc " + activityLog.getTimestamp());
+                        partner.getPartnerName() + " vào lúc " + activityLog.getTimestamp());
                 activityLog.setStatus("NEW");
                 activityLogRepository.save(activityLog);
             }
@@ -175,7 +153,7 @@ public class PartnerSerivce {
 
     public void editPartnerContact(PartnerContactDTO partnerContactDTO, String token) {
         PartnerContact partnerContact = partnerContactRepository.findById(partnerContactDTO.getId());
-        if (partnerContact != null){
+        if (partnerContact != null) {
             partnerContact.setContactName(partnerContactDTO.getContactName());
             partnerContact.setEmail(partnerContactDTO.getEmail());
             partnerContact.setSkype(partnerContactDTO.getSkype());
@@ -183,12 +161,12 @@ public class PartnerSerivce {
             partnerContact.setPhone(partnerContactDTO.getPhone());
             partnerContactRepository.save(partnerContact);
             User user = userRepository.findByToken(token);
-            if(user.getRole().equals(Role.UNIT)){
+            if (user.getRole().equals(Role.UNIT)) {
                 ActivityLog activityLog = new ActivityLog(user);
                 userRepository.save(user);
                 activityLog.setActivityType("editPartnerInfo");
                 activityLog.setAcvtivity(user.getUnitName().getUnitName() + " sửa liên hệ: " + partnerContact.getContactName() + " của Đối tác " +
-                        partnerContact.getPartner().getPartnerInfo().getPartnerName() + " vào lúc " + activityLog.getTimestamp());
+                        partnerContact.getPartner().getPartnerName() + " vào lúc " + activityLog.getTimestamp());
                 activityLog.setStatus("NEW");
                 activityLogRepository.save(activityLog);
             }
@@ -199,16 +177,16 @@ public class PartnerSerivce {
 
     public void deletePartnerContact(int contactId, String token) {
         PartnerContact partnerContact = partnerContactRepository.findById(contactId);
-        if (partnerContact != null){
-            if (partnerContact.getContract().isEmpty()){
+        if (partnerContact != null) {
+            if (partnerContact.getContract().isEmpty()) {
                 partnerContactRepository.delete(contactId);
                 User user = userRepository.findByToken(token);
-                if(user.getRole().equals(Role.UNIT)){
+                if (user.getRole().equals(Role.UNIT)) {
                     ActivityLog activityLog = new ActivityLog(user);
                     userRepository.save(user);
                     activityLog.setActivityType("deletePartnerContact");
                     activityLog.setAcvtivity(user.getUnitName().getUnitName() + " xóa liên hệ: " + partnerContact.getContactName() + " của Đối tác " +
-                            partnerContact.getPartner().getPartnerInfo().getPartnerName() + " vào lúc " + activityLog.getTimestamp());
+                            partnerContact.getPartner().getPartnerName() + " vào lúc " + activityLog.getTimestamp());
                     activityLog.setStatus("NEW");
                     activityLogRepository.save(activityLog);
                 }

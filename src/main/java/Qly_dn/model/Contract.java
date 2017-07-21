@@ -12,6 +12,8 @@ import java.util.Set;
 @Entity
 @Table(name = "contract")
 public class Contract {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String result;
     private Integer renew;
@@ -23,13 +25,31 @@ public class Contract {
     private Date endDate;
     private int ordinaryNumber;
     private int number;
+
+    @ManyToOne
+    @JoinColumn(name = "partner_id")
     private Partner partner;
-    private TypeContract typeContract;
+
+//    @ManyToOne
+//    @JoinColumn(name = "type_contract_id")
+//    private TypeContract typeContract;
+
+    @ManyToOne
+    @JoinColumn(name = "partner_contact_id")
     private PartnerContact partnerContact;
+
+    @ManyToOne
+    @JoinColumn(name = "uet_man_id")
     private UetMan uetMan;
+
+    @ManyToOne
+    @JoinColumn(name = "unit_name_id")
     private UnitName unitName;
-    @Column(length  = 2800000)
+
+    @Column(name = "contentContract", length  = 2800000)
     private String contentContract;
+
+    @OneToMany(mappedBy = "contract", cascade = CascadeType.ALL)
     private Set<CooperateActivity> cooperateActivity;
 
     public Contract(){
@@ -44,8 +64,7 @@ public class Contract {
         this.unitName = unitName;
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+
     public int getId() {
         return id;
     }
@@ -118,8 +137,7 @@ public class Contract {
         this.number = number;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "partner_id")
+
     public Partner getPartner() {
         return partner;
     }
@@ -128,18 +146,16 @@ public class Contract {
         this.partner = partner;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "type_contract_id")
-    public TypeContract getTypeContract() {
-        return typeContract;
-    }
 
-    public void setTypeContract(TypeContract typeContract) {
-        this.typeContract = typeContract;
-    }
+//    public TypeContract getTypeContract() {
+//        return typeContract;
+//    }
+//
+//    public void setTypeContract(TypeContract typeContract) {
+//        this.typeContract = typeContract;
+//    }
 
-    @ManyToOne
-    @JoinColumn(name = "uet_man_id")
+
     public UetMan getUetMan() {
         return uetMan;
     }
@@ -148,8 +164,7 @@ public class Contract {
         this.uetMan = uetMan;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "unit_name_id")
+
     public UnitName getUnitName() {
         return unitName;
     }
@@ -166,8 +181,7 @@ public class Contract {
         this.contentContract = contentContract;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "partner_contact_id")
+
     public PartnerContact getPartnerContact() {
         return partnerContact;
     }
@@ -176,7 +190,7 @@ public class Contract {
         this.partnerContact = partnerContact;
     }
 
-    @OneToMany(mappedBy = "contract", cascade = CascadeType.ALL)
+
     public Set<CooperateActivity> getCooperateActivity() {
         return cooperateActivity;
     }
